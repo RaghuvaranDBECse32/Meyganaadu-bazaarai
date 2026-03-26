@@ -1,30 +1,357 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-<title>BazaarAI Dashboard</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meyganaadu BazaarAI</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
 </head>
 
 <body>
+  <div class="buyhatke-shell">
+    <!-- 3D / glass header -->
+    <header class="buyhatke-header">
+      <div class="brand">
+        <div class="brand-icon">M</div>
+        <div class="brand-title">Meyganaadu<span>.ai</span></div>
+      </div>
 
-<h1>Meyganaadu BazaarAI</h1>
+      <nav class="top-nav">
+        <button class="nav-chip nav-btn active" onclick="showPanel('dashboard')">Hot Deals</button>
+        <button class="nav-chip nav-btn" onclick="showPanel('product')">Spend Lens</button>
+        <button class="nav-chip nav-btn" onclick="showPanel('food')">Price Alert</button>
+        <button class="nav-chip nav-btn" onclick="showPanel('analytics')">Grocery Compare</button>
+        <button class="nav-chip nav-btn" onclick="showPanel('map')">Ride Compare</button>
+      </nav>
 
-<button onclick="loadData()">Analyze Market</button>
+      <div class="user-actions">
+        <span id="user-display" style="margin-right: auto; font-weight: 500; color: var(--accent);">Guest</span>
+        <button id="btn-logout" class="btn ghost" onclick="logout()" style="display: none;">Logout</button>
+        <button class="btn ghost" onclick="signup()">Sign up</button>
+        <button class="btn primary" onclick="showPanel('login')">Login</button>
+      </div>
+    </header>
 
-<table id="table">
+    <!-- 3D hero section -->
+    <section class="hero" id="hero-section">
+      <div class="hero-content">
+        <div class="hero-pill">3D Smart Shopping Engine</div>
+        <h1>
+          Turn every<br />
+          <span class="hero-highlight">cart into a win</span>
+        </h1>
+        <p>
+          Track genuine price drops, compare across Amazon, Flipkart & food apps,
+          and watch your savings dashboard light up in real time.
+        </p>
 
-<tr>
-<th>Product</th>
-<th>Sales</th>
-<th>Price</th>
-<th>Demand Forecast</th>
-</tr>
+        <div class="search-box">
+          <div class="search-inner">
+            <input
+              id="cta-search"
+              type="text"
+              placeholder="Paste a Flipkart / Amazon link or search a product"
+            />
+            <button class="btn primary" onclick="analyzeProduct()">Analyze deal</button>
+          </div>
+          <span class="search-hint">
+            Tip: Just type <code>buyhatke.com/</code> before any product link.
+          </span>
+        </div>
 
-</table>
+        <div class="hero-metrics">
+          <div class="metric-card">
+            <span class="metric-label">Avg. savings</span>
+            <span class="metric-value">₹620</span>
+            <span class="metric-sub">per active user / month</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Price alerts</span>
+            <span class="metric-value">90%+</span>
+            <span class="metric-sub">accuracy on trend signals</span>
+          </div>
+        </div>
+      </div>
 
-<script src="script.js"></script>
+      <!-- Fake 3D product stack -->
+      <div class="hero-visual">
+        <div class="product-card product-card-main">
+          <div class="product-badge hot">Bestseller</div>
+          <div class="product-thumb"></div>
+          <div class="product-text">
+            <div class="product-title">Smart Grocery Basket</div>
+            <div class="product-price-row">
+              <span class="product-price">₹899</span>
+              <span class="product-cut">₹1,299</span>
+              <span class="product-off">31% off</span>
+            </div>
+            <div class="product-tags">
+              <span>Auto coupon</span>
+              <span>Price history</span>
+              <span>ONDC check</span>
+            </div>
+          </div>
+        </div>
 
+        <div class="product-card product-card-float float-left">
+          <div class="product-mini-title">Food Combo</div>
+          <div class="product-mini-meta">Swiggy vs Zomato</div>
+          <div class="product-mini-chip">Live fees</div>
+        </div>
+
+        <div class="product-card product-card-float float-right">
+          <div class="product-mini-title">Electronics</div>
+          <div class="product-mini-meta">Amazon vs Flipkart</div>
+          <div class="product-mini-chip green">Real drop</div>
+        </div>
+      </div>
+    </section>
+
+    <main class="main-grid">
+      <section class="feature-strip">
+        <div class="badge">Magic Trick for Online Shopping</div>
+        <div class="hint">
+          Type <span>buyhatke.com/</span> before any product link & land directly on a **deal** view.
+        </div>
+      </section>
+
+      <!-- Login Panel -->
+      <article class="panel login-panel" id="login-panel">
+        <header class="panel-header">
+          <h3>Welcome to Meyganaadu BazaarAI</h3>
+          <span class="pill">Secure Login</span>
+        </header>
+        <p>Sign up or login to unlock personalized price alerts and analytics.</p>
+        <div style="display: grid; gap: 12px; margin-top: 16px;">
+          <input id="email" type="email" placeholder="your@email.com" />
+          <input id="password" type="password" placeholder="Password" />
+          <div style="display: flex; gap: 8px;">
+            <button class="btn primary" onclick="login()" style="flex:1;">Login</button>
+            <button class="btn ghost" onclick="signup()" style="flex:1;">Sign up</button>
+          </div>
+        </div>
+        <div id="login-message" class="message"></div>
+      </article>
+
+      <!-- 3D glass panels -->
+      <section class="panel-grid">
+        <article class="panel intro-panel" id="dashboard-panel">
+          <h3>Smart overview</h3>
+          <p>Use AI-powered price radar, demand score and marketplace trust to pick only working deals.</p>
+          <ul class="stat-list">
+            <li><strong>90%+</strong> accurate price trend alerts</li>
+            <li><strong>Live</strong> Amazon / Flipkart comparisons</li>
+            <li><strong>Single-click</strong> food hotel deals</li>
+          </ul>
+          <h4 style="margin-top: 20px; font-size: 1rem;">Top Demand Products</h4>
+          <ul id="top-demand" style="list-style: none; padding: 0;"></ul>
+        </article>
+
+        <article class="panel" id="product-panel">
+          <header class="panel-header">
+            <h3>Product analyzer</h3>
+            <span class="pill">E‑commerce 3D View</span>
+          </header>
+          <p>Search any product and get marketplace‑wise pricing, fees and demand insights.</p>
+          <div class="form-grid-mini">
+            <input id="prod-query" placeholder="Search product (e.g., Rice Bag, Milk Packet)" />
+            <button class="btn" onclick="analyzeProduct()">Analyze</button>
+          </div>
+          <div id="product-message" class="message"></div>
+          <table id="product-table" class="result-table" style="display:none;">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Sales</th>
+                <th>Price</th>
+                <th>Amazon</th>
+                <th>Flipkart</th>
+                <th>Best</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </article>
+
+        <article class="panel" id="food-panel">
+          <header class="panel-header">
+            <h3>Food & hotel compare</h3>
+            <span class="pill pill-soft">Swiggy / Zomato</span>
+          </header>
+          <p>Skip dark patterns by seeing total price, packaging, surge and tips in one place.</p>
+          <div class="form-grid-mini">
+            <input id="food-query" placeholder="Search food (e.g., Biryani, Dosa)" />
+            <button class="btn" onclick="analyzeFood()">Compare</button>
+          </div>
+          <div id="food-message" class="message"></div>
+          <table id="food-table" class="result-table" style="display:none;">
+            <thead>
+              <tr>
+                <th>Hotel</th>
+                <th>Swiggy</th>
+                <th>Zomato</th>
+                <th>Rating</th>
+                <th>Recommend</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </article>
+      </section>
+
+      <!-- Analytics with 3D-style cards -->
+      <section class="panel analytics-panel" id="analytics-panel">
+        <header class="panel-header">
+          <h3>Savings analytics</h3>
+          <span class="pill pill-soft">Live charts</span>
+        </header>
+        <p>Visualize demand spikes, discount cycles and how much you actually saved across platforms.</p>
+
+        <div class="charts-grid">
+          <div class="chart-container">
+            <h4>Demand trends</h4>
+            <canvas id="demandChart"></canvas>
+          </div>
+          <div class="chart-container">
+            <h4>Price comparison</h4>
+            <canvas id="priceChart"></canvas>
+          </div>
+        </div>
+        <button class="btn primary" onclick="loadAnalytics()">Load insights</button>
+        <div id="analytics-message" class="message"></div>
+      </section>
+
+      <!-- Leaflet 3D-like ecommerce map -->
+      <section class="panel" id="map-section">
+        <div class="map-header">
+          <h3>Live Bazaar map</h3>
+          <span class="map-badge">3D land hover</span>
+        </div>
+        <p>Explore demand hotspots and marketplace coverage in an interactive 3D‑styled map.</p>
+        <div id="map"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>Meyganaadu BazaarAI – track price, compare stores, and save every order</div>
+      <div class="foot-links">
+        <a href="#">About</a> • <a href="#">Support</a> • <a href="#">Terms</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin="">
+  </script>
+
+  <!-- Your main logic -->
+  <script src="script.js"></script>
+
+  <script>
+    // Leaflet init
+    const map = L.map('map', {
+      zoomControl: true,
+      minZoom: 2,
+      maxZoom: 18,
+      worldCopyJump: true
+    }).setView([20.5937, 78.9629], 5);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Regions as 3D-ish “ecommerce zones”
+    const regions = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": { "name": "Chennai Hub", "demand": "High" },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [[[80.05, 13.0],[80.4,13.0],[80.4,13.2],[80.05,13.2],[80.05,13.0]]]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": { "name": "Bengaluru Hub", "demand": "Medium" },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [[[77.45,12.8],[77.8,12.8],[77.8,13.1],[77.45,13.1],[77.45,12.8]]]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": { "name": "Hyderabad Hub", "demand": "Rising" },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [[[78.35,17.25],[78.7,17.25],[78.7,17.55],[78.35,17.55],[78.35,17.25]]]
+          }
+        }
+      ]
+    };
+
+    let hoveredLayer = null;
+
+    function regionStyle() {
+      return {
+        color: '#0b5130',
+        weight: 1,
+        fillColor: '#24b45a',
+        fillOpacity: 0.75,
+        className: 'land-region'
+      };
+    }
+
+    function onEachRegion(feature, layer) {
+      layer.bindTooltip(
+        `<strong>${feature.properties.name}</strong><br/>Demand: ${feature.properties.demand}`,
+        { sticky: true }
+      );
+
+      layer.on('mouseover', () => {
+        if (hoveredLayer && hoveredLayer !== layer) {
+          hoveredLayer.getElement()?.classList.remove('hovered');
+        }
+        hoveredLayer = layer;
+        layer.getElement()?.classList.add('hovered');
+      });
+
+      layer.on('mouseout', () => {
+        layer.getElement()?.classList.remove('hovered');
+        hoveredLayer = null;
+      });
+
+      layer.on('click', () => {
+        // TODO: integrate with product / analytics filters
+        console.log('Clicked region:', feature.properties.name);
+      });
+    }
+
+    L.geoJSON(regions, {
+      style: regionStyle,
+      onEachFeature: onEachRegion
+    }).addTo(map);
+
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 400);
+  </script>
 </body>
-
 </html>
